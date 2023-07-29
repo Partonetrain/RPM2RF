@@ -1,0 +1,28 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "rpm2rf:block/alternator/block",
+      "x": 270, "y": 90
+    },
+    "facing=up": {
+      "model": "rpm2rf:block/alternator/block",
+      "x": 90, "y": 90
+    },
+    "facing=north": {
+      "model": "rpm2rf:block/alternator/block",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "rpm2rf:block/alternator/block",
+      "y": 0
+    },
+    "facing=west": {
+      "model": "rpm2rf:block/alternator/block",
+      "y": 90
+    },
+    "facing=east": {
+      "model": "rpm2rf:block/alternator/block",
+      "y": 270
+    }
+  }
+}
