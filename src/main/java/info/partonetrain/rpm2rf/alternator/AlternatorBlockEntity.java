@@ -122,7 +122,7 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
         double base_rate = (Math.pow(rpm, 2))/divisor; //this is where I learned Java doesn't have an exponent operator, and ^ is the xor operator.
         int output = (int)(base_rate * multiplier);
 
-        RPM2RF.LOGGER.info("RPM: " + rpm + ", base_rate: " + base_rate + ", divisor: " + divisor + ", multiplier: " + multiplier + ", Energy: " + output);
+        //RPM2RF.LOGGER.info("RPM: " + rpm + ", base_rate: " + base_rate + ", divisor: " + divisor + ", multiplier: " + multiplier + ", Energy: " + output);
         return output;
     }
 
