@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.List;
@@ -46,8 +47,6 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
         boolean added = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
-        //tooltip.add(new StringTextComponent(spacing).append(new TranslationTextComponent(CreateAddition.MODID + ".tooltip.energy.stored").formatted(TextFormatting.GRAY)));
-        //tooltip.add(new StringTextComponent(spacing).append(new StringTextComponent(" " + Multimeter.getString(energy) + "fe").formatted(TextFormatting.AQUA)));
         tooltip.add(Component.literal(spacing).append(Component.translatable(RPM2RF.MODID + ".tooltip.energy.production").withStyle(ChatFormatting.GRAY)));
         tooltip.add(Component.literal(spacing).append(Component.literal(" " + this.format(getEnergyProductionRate((int) (isSpeedRequirementFulfilled() ? getSpeed() : 0))) + "fe/t ") // fix
                 .withStyle(ChatFormatting.AQUA)).append(Lang.translateDirect("gui.goggles.at_current_speed").withStyle(ChatFormatting.DARK_GRAY)));
@@ -69,6 +68,7 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
         return super.getCapability(cap, side);
     }
 
+
     public boolean isEnergyInput(Direction side) {
         return false;
     }
@@ -80,13 +80,11 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
     @Override
     public void read(CompoundTag compound, boolean clientPacket) {
         super.read(compound, clientPacket);
-        energy.read(compound);
     }
 
     @Override
     public void write(CompoundTag compound, boolean clientPacket) {
         super.write(compound, clientPacket);
-        energy.write(compound);
     }
 
     private boolean firstTickState = true;
@@ -100,9 +98,9 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
             firstTick();
         firstTickState = false;
 
-        if(Math.abs(getSpeed()) > 0 && isSpeedRequirementFulfilled())
+        if(Math.abs(getSpeed()) > 0 && isSpeedRequirementFulfilled()){
             energy.internalProduceEnergy(getEnergyProductionRate((int)getSpeed()));
-
+        }
 
         for(Direction d : Direction.values()) {
             if(!isEnergyOutput(d))
@@ -110,7 +108,9 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
             IEnergyStorage ies = getCachedEnergy(d);
             if(ies == null)
                 continue;
-            int ext = energy.extractEnergy(ies.receiveEnergy(Config.ALTERNATOR_MAX_OUTPUT.get(), true), false);
+            int ext = energy.extractEnergy(ies.receiveEnergy(Config.ALTERNATOR_MAX_OUTPUT.get(), false), false);
+            RPM2RF.LOGGER.info("Energy Extracted: " + String.valueOf(ext));
+            energy.log();
         }
     }
 
