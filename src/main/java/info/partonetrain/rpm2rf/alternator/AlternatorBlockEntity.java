@@ -5,7 +5,7 @@ import com.simibubi.create.foundation.utility.Lang;
 
 import info.partonetrain.rpm2rf.RPM2RF;
 import info.partonetrain.rpm2rf.config.Config;
-import info.partonetrain.rpm2rf.energy.InternalEnergyStorage;
+import info.partonetrain.rpm2rf.energy.ModEnergyStorage;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -24,7 +24,9 @@ import java.util.List;
 
 public class AlternatorBlockEntity extends KineticBlockEntity{
 
-    protected final InternalEnergyStorage energy;
+    int ticker;
+    protected final ModEnergyStorage energy;
+
     private LazyOptional<IEnergyStorage> lazyEnergy;
 
     //from CreateAddition's Util.java
@@ -40,18 +42,17 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
 
     public AlternatorBlockEntity(BlockEntityType<?> typeIn, BlockPos pos, BlockState state) {
         super(typeIn, pos, state);
-        energy = new InternalEnergyStorage(Config.ALTERNATOR_CAPACITY.get(), 0, Config.ALTERNATOR_MAX_OUTPUT.get());
+        energy = new ModEnergyStorage(Config.ALTERNATOR_CAPACITY.get(), 0, Config.ALTERNATOR_MAX_OUTPUT.get());
         lazyEnergy = LazyOptional.of(() -> energy);
     }
 
     @Override
     public boolean addToGoggleTooltip(List<Component> tooltip, boolean isPlayerSneaking) {
-        boolean added = super.addToGoggleTooltip(tooltip, isPlayerSneaking);
+        super.addToGoggleTooltip(tooltip, isPlayerSneaking);
         tooltip.add(Component.literal(spacing).append(Component.translatable(RPM2RF.MODID + ".tooltip.energy.production").withStyle(ChatFormatting.GRAY)));
         tooltip.add(Component.literal(spacing).append(Component.literal(" " + this.format(getEnergyProductionRate((int) (isSpeedRequirementFulfilled() ? getSpeed() : 0))) + "fe/t ") // fix
                 .withStyle(ChatFormatting.AQUA)).append(Lang.translateDirect("gui.goggles.at_current_speed").withStyle(ChatFormatting.DARK_GRAY)));
-        added = true;
-        return added;
+        return true;
     }
 
     @Override
@@ -63,18 +64,9 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
 
     @Override
     public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
-        if(cap == ForgeCapabilities.ENERGY) // && (isEnergyInput(side) || isEnergyOutput(side)))
+        if(cap == ForgeCapabilities.ENERGY)
             return lazyEnergy.cast();
         return super.getCapability(cap, side);
-    }
-
-
-    public boolean isEnergyInput(Direction side) {
-        return false;
-    }
-
-    public boolean isEnergyOutput(Direction side) {
-        return true; //side != getBlockState().getValue(AlternatorBlock.FACING); //tried to get this to work, but it doesn't
     }
 
     @Override
@@ -87,31 +79,36 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
         super.write(compound, clientPacket);
     }
 
-    private boolean firstTickState = true;
-
     @Override
     public void tick() {
+
+        ticker++;
         super.tick();
-        if(level.isClientSide())
-            return;
-        if(firstTickState)
-            firstTick();
-        firstTickState = false;
 
+        //generate and store the appropriate amount of energy
         if(Math.abs(getSpeed()) > 0 && isSpeedRequirementFulfilled()){
-            energy.internalProduceEnergy(getEnergyProductionRate((int)getSpeed()));
+            energy.generateEnergy(getEnergyProductionRate((int)Math.abs(getSpeed())));
+            RPM2RF.LOGGER.info("Generated: " + getEnergyProductionRate((int)Math.abs(getSpeed())) );
         }
 
-        for(Direction d : Direction.values()) {
-            if(!isEnergyOutput(d))
+        //transfer energy to adjacent energy-capable blocks
+        for(int i = 0; (i < Direction.values().length) && (energy.getMaxEnergyStored() > 0); i++) {
+            Direction facing = Direction.values()[i];
+
+            BlockEntity blockEntity = level.getBlockEntity(worldPosition.relative(facing));
+            if (blockEntity == null)
                 continue;
-            IEnergyStorage ies = getCachedEnergy(d);
-            if(ies == null)
-                continue;
-            int ext = energy.extractEnergy(ies.receiveEnergy(Config.ALTERNATOR_MAX_OUTPUT.get(), false), false);
-            RPM2RF.LOGGER.info("Energy Extracted: " + String.valueOf(ext));
-            energy.log();
+            blockEntity.getCapability(ForgeCapabilities.ENERGY, facing.getOpposite()).ifPresent(ies -> { //ies = IEnergyStorage of other BlockEntity
+                        if(ies.canReceive()) {
+                            int received = ies.receiveEnergy(Math.min(energy.getMaxEnergyStored(), energy.getMaxExtract()), false);
+                            energy.consumeEnergy(received);
+                            setChanged();
+                            RPM2RF.LOGGER.info("Energy output: " + received);
+                        }
+                    });
         }
+
+        RPM2RF.LOGGER.info("ticker:" + ticker);
     }
 
     public static int getEnergyProductionRate(int rpm) {
@@ -122,7 +119,7 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
         double base_rate = (Math.pow(rpm, 2))/divisor; //this is where I learned Java doesn't have an exponent operator, and ^ is the xor operator.
         int output = (int)(base_rate * multiplier);
 
-        //RPM2RF.LOGGER.info("RPM: " + rpm + ", base_rate: " + base_rate + ", divisor: " + divisor + ", multiplier: " + multiplier + ", Energy: " + output);
+        RPM2RF.LOGGER.info("ENERGY CALC: " + output + " at " + rpm + "rpms");
         return output;
     }
 
@@ -130,24 +127,6 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
     public void remove() {
         lazyEnergy.invalidate();
         super.remove();
-    }
-
-    public void firstTick() {
-        updateCache();
-    };
-
-    public void updateCache() {
-        if(level.isClientSide())
-            return;
-        for(Direction side : Direction.values()) {
-            BlockEntity te = level.getBlockEntity(worldPosition.relative(side));
-            if(te == null) {
-                setCache(side, LazyOptional.empty());
-                continue;
-            }
-            LazyOptional<IEnergyStorage> le = te.getCapability(ForgeCapabilities.ENERGY, side.getOpposite());
-            setCache(side, le);
-        }
     }
 
     private LazyOptional<IEnergyStorage> escacheUp = LazyOptional.empty();

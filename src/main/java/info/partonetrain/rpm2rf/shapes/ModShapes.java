@@ -38,9 +38,6 @@ public class ModShapes {
         public Builder add(double x1, double y1, double z1, double x2, double y2, double z2) {
             return add(cuboid(x1, y1, z1, x2, y2, z2));
         }
-        public VoxelShape build() {
-            return shape;
-        }
 
         public VoxelShaper build(BiFunction<VoxelShape, Direction, VoxelShaper> factory, Direction direction) {
             return factory.apply(shape, direction);

@@ -1,12 +1,12 @@
 {
   "variants": {
     "facing=down": {
-      "model": "rpm2rf:block/alternator/block",
-      "x": 270, "y": 90
+      "model": "rpm2rf:block/alternator/block_vert",
+      "x": 270
     },
     "facing=up": {
-      "model": "rpm2rf:block/alternator/block",
-      "x": 90, "y": 90
+      "model": "rpm2rf:block/alternator/block_vert",
+      "x": 0
     },
     "facing=north": {
       "model": "rpm2rf:block/alternator/block",

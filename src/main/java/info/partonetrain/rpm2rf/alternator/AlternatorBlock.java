@@ -27,7 +27,7 @@ public class AlternatorBlock extends DirectionalKineticBlock implements IBE<Alte
 
 
     //why is com.simibubi.create.AllShapes.shape(double x1, double y1, double z1, double x2, double y2, double z2) private? :(
-    public static final VoxelShaper ALTERNATOR_SHAPE = ModShapes.shape(0, 3, 0, 16, 13, 16).add(2, 0, 2, 14, 14, 14).forDirectional();
+    public static final VoxelShaper ALTERNATOR_SHAPE = ModShapes.shape(2, 0, 1, 12, 12, 13).forDirectional();
 
 
     @Override
@@ -79,13 +79,4 @@ public class AlternatorBlock extends DirectionalKineticBlock implements IBE<Alte
         return SpeedLevel.SLOW; //SpeedLevel.SLOW is anything below 30 rpm (by default Create config)
     }
 
-    @Override
-    public void neighborChanged(BlockState state, Level worldIn, BlockPos pos, Block blockIn, BlockPos fromPos, boolean isMoving) {
-        BlockEntity be = state.hasBlockEntity() ? worldIn.getBlockEntity(pos) : null;
-        if(be != null) {
-            if(be instanceof AlternatorBlockEntity) {
-                ((AlternatorBlockEntity)be).updateCache();
-            }
-        }
-    }
 }

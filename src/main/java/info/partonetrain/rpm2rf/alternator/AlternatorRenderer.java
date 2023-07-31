@@ -18,6 +18,6 @@ public class AlternatorRenderer extends KineticBlockEntityRenderer {
 
     @Override
     protected SuperByteBuffer getRotatedModel(KineticBlockEntity te, BlockState state) {
-        return CachedBufferer.partialFacing(AllPartialModels.SHAFT_HALF, state);
+        return CachedBufferer.partial(AllPartialModels.SHAFT_HALF, state);
     }
 }
