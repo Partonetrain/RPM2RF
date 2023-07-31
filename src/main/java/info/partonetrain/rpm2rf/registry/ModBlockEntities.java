@@ -11,7 +11,6 @@ public class ModBlockEntities {
 
     public static final BlockEntityEntry<AlternatorBlockEntity> ALTERNATOR = RPM2RF.REGISTRATE
             .blockEntity("alternator", AlternatorBlockEntity::new)
-            .instance(() -> HalfShaftInstance::new)
             .validBlocks(ModBlocks.ALTERNATOR)
             .renderer(() -> AlternatorRenderer::new)
             .register();

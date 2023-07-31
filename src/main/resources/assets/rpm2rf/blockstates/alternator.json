@@ -1,28 +1,14 @@
 {
   "variants": {
-    "facing=down": {
-      "model": "rpm2rf:block/alternator/block_vert",
-      "x": 270
-    },
-    "facing=up": {
-      "model": "rpm2rf:block/alternator/block_vert",
-      "x": 0
-    },
-    "facing=north": {
-      "model": "rpm2rf:block/alternator/block",
-      "y": 180
-    },
-    "facing=south": {
-      "model": "rpm2rf:block/alternator/block",
-      "y": 0
-    },
-    "facing=west": {
+    "axis=x": {
       "model": "rpm2rf:block/alternator/block",
       "y": 90
     },
-    "facing=east": {
-      "model": "rpm2rf:block/alternator/block",
-      "y": 270
+    "axis=y": {
+      "model": "rpm2rf:block/alternator/block_vert"
+    },
+    "axis=z": {
+      "model": "rpm2rf:block/alternator/block"
     }
   }
 }

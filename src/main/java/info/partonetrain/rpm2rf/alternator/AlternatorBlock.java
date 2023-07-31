@@ -1,7 +1,10 @@
 package info.partonetrain.rpm2rf.alternator;
 
+import com.simibubi.create.AllShapes;
 import com.simibubi.create.content.kinetics.base.DirectionalKineticBlock;
 import com.simibubi.create.content.kinetics.base.IRotate;
+import com.simibubi.create.content.kinetics.base.KineticBlock;
+import com.simibubi.create.content.kinetics.base.RotatedPillarKineticBlock;
 import com.simibubi.create.foundation.block.IBE;
 import com.simibubi.create.foundation.utility.VoxelShaper;
 
@@ -9,9 +12,7 @@ import info.partonetrain.rpm2rf.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -20,28 +21,27 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import info.partonetrain.rpm2rf.shapes.ModShapes;
+public class AlternatorBlock extends RotatedPillarKineticBlock implements IBE<AlternatorBlockEntity>, IRotate {
 
+    //there has to be a better way to do this lol
+    public static final VoxelShape ALTERNATOR_X_SHAPE = Block.box(1, 2, 2, 15, 14, 14);
+    public static final VoxelShape ALTERNATOR_Y_SHAPE = Block.box(2, 1, 2, 14, 15, 14);
+    public static final VoxelShape ALTERNATOR_Z_SHAPE = Block.box(2, 2, 1, 14, 14, 15);
 
-public class AlternatorBlock extends DirectionalKineticBlock implements IBE<AlternatorBlockEntity>, IRotate {
+    public VoxelShape getCollisionShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
+        if(getRotationAxis(state) == Axis.X){
+            return ALTERNATOR_X_SHAPE;
+        }else if(getRotationAxis(state) == Axis.Y){
+            return ALTERNATOR_Y_SHAPE;
+        }else{
+            return ALTERNATOR_Z_SHAPE;
+        }
 
-
-    //why is com.simibubi.create.AllShapes.shape(double x1, double y1, double z1, double x2, double y2, double z2) private? :(
-    public static final VoxelShaper ALTERNATOR_SHAPE = ModShapes.shape(2, 0, 1, 12, 12, 13).forDirectional();
-
-
-    @Override
-    public VoxelShape getShape(BlockState state, BlockGetter worldIn, BlockPos pos, CollisionContext context) {
-        return ALTERNATOR_SHAPE.get(state.getValue(FACING));
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext context) {
-        Direction preferred = getPreferredFacing(context);
-        if ((context.getPlayer() != null && context.getPlayer()
-                .isShiftKeyDown()) || preferred == null)
-            return super.getStateForPlacement(context);
-        return defaultBlockState().setValue(FACING, preferred);
+    public VoxelShape getShape(BlockState p_60555_, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_) {
+        return getCollisionShape(p_60555_, p_60556_, p_60557_, p_60558_);
     }
 
     public AlternatorBlock(Properties properties) {
@@ -50,13 +50,11 @@ public class AlternatorBlock extends DirectionalKineticBlock implements IBE<Alte
 
     @Override
     public boolean hasShaftTowards(LevelReader world, BlockPos pos, BlockState state, Direction face) {
-        return face == state.getValue(FACING);
+        return face.getAxis() == state.getValue(AXIS);
     }
-
     @Override
     public Axis getRotationAxis(BlockState state) {
-        return state.getValue(FACING)
-                .getAxis();
+        return state.getValue(AXIS);
     }
 
     @Override

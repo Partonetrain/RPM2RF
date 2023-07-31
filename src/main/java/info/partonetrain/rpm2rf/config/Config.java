@@ -25,17 +25,10 @@ public class Config {
     static {
         COMMON_BUILDER.comment("These are not synced over the network, so make sure client/server have same config values.");
 
-        /*
-        COMMON_BUILDER.comment("General Settings").push("general");
-        FE_RPM = COMMON_BUILDER.comment("Forge Energy conversion rate (in FE/t at 256 RPM, value is the FE/t generated and consumed is at 256rpm).")
-                .defineInRange("fe_at_max_rpm", 256, 0, Integer.MAX_VALUE);
-        COMMON_BUILDER.pop();
-        */
-
         COMMON_BUILDER.comment("Alternator").push("alternator");
         STRESS_MULTIPLIER = COMMON_BUILDER.comment("Stress Units generated per per RPM")
                 .defineInRange("stress_multiplier", 32, 0, Integer.MAX_VALUE);
-        ALTERNATOR_MAX_OUTPUT = COMMON_BUILDER.comment("Alternator max input in FE (Energy transfer, not generation).")
+        ALTERNATOR_MAX_OUTPUT = COMMON_BUILDER.comment("Alternator max energy output in FE (Energy transfer, not generation).").comment("Do note, ~ 4096 FE/t is the highest transfer rate in multiple mods.")
                 .defineInRange("generator_max_output", 8192, 1, Integer.MAX_VALUE);
         ALTERNATOR_CAPACITY = COMMON_BUILDER.comment("Alternator internal capacity in FE.")
                 .defineInRange("generator_capacity", 8192, 1, Integer.MAX_VALUE);

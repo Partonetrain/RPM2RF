@@ -17,14 +17,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.energy.EnergyStorage;
 import net.minecraftforge.energy.IEnergyStorage;
 
 import java.util.List;
 
 public class AlternatorBlockEntity extends KineticBlockEntity{
 
-    int ticker;
+    //int ticker;
     protected final ModEnergyStorage energy;
 
     private LazyOptional<IEnergyStorage> lazyEnergy;
@@ -82,13 +81,13 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
     @Override
     public void tick() {
 
-        ticker++;
+        //ticker++;
         super.tick();
 
         //generate and store the appropriate amount of energy
         if(Math.abs(getSpeed()) > 0 && isSpeedRequirementFulfilled()){
             energy.generateEnergy(getEnergyProductionRate((int)Math.abs(getSpeed())));
-            RPM2RF.LOGGER.info("Generated: " + getEnergyProductionRate((int)Math.abs(getSpeed())) );
+            //RPM2RF.LOGGER.info("Generated: " + getEnergyProductionRate((int)Math.abs(getSpeed())) );
         }
 
         //transfer energy to adjacent energy-capable blocks
@@ -100,15 +99,15 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
                 continue;
             blockEntity.getCapability(ForgeCapabilities.ENERGY, facing.getOpposite()).ifPresent(ies -> { //ies = IEnergyStorage of other BlockEntity
                         if(ies.canReceive()) {
-                            int received = ies.receiveEnergy(Math.min(energy.getMaxEnergyStored(), energy.getMaxExtract()), false);
+                            int received = ies.receiveEnergy(Math.min(energy.getEnergyStored(), energy.getMaxExtract()), false);
                             energy.consumeEnergy(received);
                             setChanged();
-                            RPM2RF.LOGGER.info("Energy output: " + received);
+                            //RPM2RF.LOGGER.info("Energy output: " + received);
                         }
                     });
         }
 
-        RPM2RF.LOGGER.info("ticker:" + ticker);
+        //RPM2RF.LOGGER.info("ticker:" + ticker);
     }
 
     public static int getEnergyProductionRate(int rpm) {
@@ -119,7 +118,7 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
         double base_rate = (Math.pow(rpm, 2))/divisor; //this is where I learned Java doesn't have an exponent operator, and ^ is the xor operator.
         int output = (int)(base_rate * multiplier);
 
-        RPM2RF.LOGGER.info("ENERGY CALC: " + output + " at " + rpm + "rpms");
+        //RPM2RF.LOGGER.info("ENERGY CALC: " + output + " at " + rpm + "rpms");
         return output;
     }
 

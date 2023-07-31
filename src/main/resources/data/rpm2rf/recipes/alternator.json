@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "b": {
+      "tag": "forge:ingots/brass"
+    },
+    "s": {
+      "item": "create:shaft"
+    }
+  },
+  "pattern": [
+    " b ",
+    "bsb",
+    " b "
+  ],
+  "result": {
+    "item": "rpm2rf:alternator"
+  }
+}

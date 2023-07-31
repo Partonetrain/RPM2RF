@@ -11,6 +11,7 @@ public class ModEnergyStorage extends EnergyStorage {
     public int getMaxExtract() {
         return maxExtract; //this is protected to we need a method
     }
+    public int getEnergyStored() { return energy; }
 
     public void generateEnergy(int energy) {
         this.energy += energy;
