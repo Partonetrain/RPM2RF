@@ -5,8 +5,6 @@ import com.simibubi.create.content.kinetics.BlockStressValues;
 import com.simibubi.create.foundation.ponder.PonderRegistrationHelper;
 import com.simibubi.create.infrastructure.config.AllConfigs;
 import com.simibubi.create.infrastructure.ponder.AllPonderTags;
-import info.partonetrain.rpm2rf.network.EnergyNetworkPacket;
-import info.partonetrain.rpm2rf.network.ObservePacket;
 import info.partonetrain.rpm2rf.ponder.PonderScenes;
 import info.partonetrain.rpm2rf.registry.ModBlockEntities;
 import info.partonetrain.rpm2rf.registry.ModBlocks;
@@ -70,15 +68,11 @@ public class RPM2RF
             HELPER.addStoryBoard(ModBlocks.ALTERNATOR, "alternator", PonderScenes::alternator, AllPonderTags.KINETIC_APPLIANCES);
         });
     }
-
     private void init(final FMLCommonSetupEvent event){
         BlockStressValues.registerProvider(MODID, AllConfigs.server().kinetics.stressValues);
     }
 
     public void postInit(FMLLoadCompleteEvent evt) {
-        //Network.registerMessage(i++, ObservePacket.class, ObservePacket::encode, ObservePacket::decode, ObservePacket::handle);
-        //Network.registerMessage(i++, EnergyNetworkPacket.class, EnergyNetworkPacket::encode, EnergyNetworkPacket::decode, EnergyNetworkPacket::handle);
-
         LOGGER.debug("RPM2RF Initialized");
     }
 }

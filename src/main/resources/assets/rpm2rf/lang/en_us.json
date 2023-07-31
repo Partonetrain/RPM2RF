@@ -1,4 +1,9 @@
 {
 	"block.rpm2rf.alternator": "Alternator",
-	"rpm2rf.tooltip.energy.production": "Energy Production: "
+	"rpm2rf.tooltip.energy.production": "Energy Production: ",
+
+	"rpm2rf.ponder.alternator.header": "Generating electric energy using an Alternator",
+	"rpm2rf.ponder.alternator.text_1": "The Alternator generates electric energy (FE) from rotational force",
+	"rpm2rf.ponder.alternator.text_2": "The Alternator's energy production is determined by the input RPM"
+
 }

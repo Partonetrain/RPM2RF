@@ -8,7 +8,7 @@ import net.minecraft.core.Direction;
 public class PonderScenes {
 
     public static void alternator(SceneBuilder scene, SceneBuildingUtil util) {
-        scene.title("alternator", "Generating Electric energy using a Alternator");
+        scene.title("alternator", "Generating electric energy using an Alternator");
         scene.configureBasePlate(1, 0, 4);
         scene.world.showSection(util.select.layer(0), Direction.UP);
 
@@ -26,13 +26,6 @@ public class PonderScenes {
                 .placeNearTarget()
                 .pointAt(util.vector.topOf(generator));
         scene.idle(60);
-
-        scene.overlay.showText(50)
-                .text("It requires at least 32 RPM to operate")
-                .placeNearTarget()
-                .pointAt(util.vector.topOf(generator));
-        scene.idle(60);
-
 
         scene.overlay.showText(50)
                 .text("The Alternator's energy production is determined by the input RPM")

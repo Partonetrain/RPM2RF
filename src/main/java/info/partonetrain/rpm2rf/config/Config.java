@@ -26,9 +26,9 @@ public class Config {
         COMMON_BUILDER.comment("These are not synced over the network, so make sure client/server have same config values.");
 
         COMMON_BUILDER.comment("Alternator").push("alternator");
-        STRESS_MULTIPLIER = COMMON_BUILDER.comment("Stress Units generated per per RPM")
+        STRESS_MULTIPLIER = COMMON_BUILDER.comment("Stress Units generated per RPM")
                 .defineInRange("stress_multiplier", 32, 0, Integer.MAX_VALUE);
-        ALTERNATOR_MAX_OUTPUT = COMMON_BUILDER.comment("Alternator max energy output in FE (Energy transfer, not generation).").comment("Do note, ~ 4096 FE/t is the highest transfer rate in multiple mods.")
+        ALTERNATOR_MAX_OUTPUT = COMMON_BUILDER.comment("Alternator max energy output in FE (Energy transfer, not generation).").comment("Note: ~4096 FE/t is the highest transfer rate in multiple mods.")
                 .defineInRange("generator_max_output", 8192, 1, Integer.MAX_VALUE);
         ALTERNATOR_CAPACITY = COMMON_BUILDER.comment("Alternator internal capacity in FE.")
                 .defineInRange("generator_capacity", 8192, 1, Integer.MAX_VALUE);
