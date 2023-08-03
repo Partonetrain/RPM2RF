@@ -49,7 +49,7 @@ Adds a block that converts kinetic energy from Create to RF/FE
     versionRange="[0.5.1.b,)"
     ordering="NONE"
     side="BOTH"
-[[dependencies.createaddition]]
+[[dependencies.rpm2rf]]
     modId="flywheel"
     mandatory=true
     versionRange="[0.6.8.a,)"
