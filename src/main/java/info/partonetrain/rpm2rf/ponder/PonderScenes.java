@@ -21,17 +21,17 @@ public class PonderScenes {
         }
 
         scene.idle(10);
-        scene.overlay.showText(50)
+        scene.overlay.showText(70)
                 .text("The Alternator generates electric energy (FE) from rotational force")
                 .placeNearTarget()
                 .pointAt(util.vector.topOf(generator));
-        scene.idle(60);
+        scene.idle(80);
 
-        scene.overlay.showText(50)
+        scene.overlay.showText(70)
                 .text("The Alternator's energy production is determined by the input RPM")
                 .placeNearTarget()
                 .pointAt(util.vector.topOf(generator));
-        scene.idle(60);
+        scene.idle(80);
         scene.markAsFinished();
     }
 }
