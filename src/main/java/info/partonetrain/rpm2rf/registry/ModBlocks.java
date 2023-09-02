@@ -22,7 +22,6 @@ public class ModBlocks {
     public static final BlockEntry<AlternatorBlock> ALTERNATOR = RPM2RF.REGISTRATE.block("alternator", AlternatorBlock::new)
             .initialProperties(SharedProperties::softMetal)
             .transform(BlockStressDefaults.setImpact(Config.STRESS_MULTIPLIER.get()))
-            .tag(AllBlockTags.SAFE_NBT.tag)
             .item()
             .transform(customItemModel())
             .register();
