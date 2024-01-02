@@ -18,12 +18,12 @@ import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.IEnergyStorage;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 public class AlternatorBlockEntity extends KineticBlockEntity{
 
-    //int ticker;
     protected final ModEnergyStorage energy;
 
     private LazyOptional<IEnergyStorage> lazyEnergy;
@@ -62,7 +62,7 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
     }
 
     @Override
-    public <T> LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
+    public <T> @NotNull LazyOptional<T> getCapability(Capability<T> cap, Direction side) {
         if(cap == ForgeCapabilities.ENERGY)
             return lazyEnergy.cast();
         return super.getCapability(cap, side);
@@ -81,7 +81,6 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
     @Override
     public void tick() {
 
-        //ticker++;
         super.tick();
 
         //generate and store the appropriate amount of energy
@@ -159,20 +158,13 @@ public class AlternatorBlockEntity extends KineticBlockEntity{
     }
 
     public IEnergyStorage getCachedEnergy(Direction side) {
-        switch(side) {
-            case DOWN:
-                return escacheDown.orElse(null);
-            case EAST:
-                return escacheEast.orElse(null);
-            case NORTH:
-                return escacheNorth.orElse(null);
-            case SOUTH:
-                return escacheSouth.orElse(null);
-            case UP:
-                return escacheUp.orElse(null);
-            case WEST:
-                return escacheWest.orElse(null);
-        }
-        return null;
+        return switch (side) {
+            case DOWN -> escacheDown.orElse(null);
+            case EAST -> escacheEast.orElse(null);
+            case NORTH -> escacheNorth.orElse(null);
+            case SOUTH -> escacheSouth.orElse(null);
+            case UP -> escacheUp.orElse(null);
+            case WEST -> escacheWest.orElse(null);
+        };
     }
 }

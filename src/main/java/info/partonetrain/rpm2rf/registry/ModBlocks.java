@@ -1,5 +1,6 @@
 package info.partonetrain.rpm2rf.registry;
 
+import com.simibubi.create.AllCreativeModeTabs;
 import com.simibubi.create.AllTags.AllBlockTags;
 import com.simibubi.create.content.kinetics.BlockStressDefaults;
 import com.simibubi.create.foundation.data.SharedProperties;
@@ -15,7 +16,7 @@ import static com.simibubi.create.foundation.data.ModelGen.customItemModel;
 public class ModBlocks {
 
     static {
-        RPM2RF.REGISTRATE.creativeModeTab(() -> BASE_CREATIVE_TAB);
+        RPM2RF.REGISTRATE.setCreativeTab(BASE_CREATIVE_TAB);
         //this is Create's creative tab, although it won't show up there, this is just to add it to creative search
     }
 
